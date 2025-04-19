@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Nuestros Menús</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row>
+      @for (item of menuItems; track item.id) {
+        <ion-col size="12" size-md="6" size-lg="4">
+          <ion-card (click)="openMenuDetails(item.id)" class="menu-card">
+            <ion-img [src]="item.image" [alt]="item.name"></ion-img>
+            <ion-card-header>
+              <ion-card-title>{{ item.name }}</ion-card-title>
+              <ion-card-subtitle>{{ item.price | currency:'USD' }}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <p>{{ item.description }}</p>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      }
+    </ion-row>
+  </ion-grid>
+</ion-content>
