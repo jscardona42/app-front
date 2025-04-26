@@ -1,76 +1,65 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button defaultHref="/menu-list"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ menuName }}</ion-title>
+    <ion-title>{{ menu?.name }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
+  @if (menu) {
   <ion-list>
-    <ion-list-header *ngIf="menuDetails?.starters?.length">
-      <ion-label>Entradas</ion-label>
+    @for (category of menu.menuCategories; track category.id) {
+    <ion-list-header>
+      <ion-label>{{ category.name }}</ion-label>
     </ion-list-header>
-    @for (item of menuDetails?.starters; track item.id) {
-      <ion-item>
-        <ion-checkbox slot="start" [(ngModel)]="item.selected"></ion-checkbox>
-        <ion-label>{{ item.name }}</ion-label>
-      </ion-item>
-    }
 
-    <ion-list-header *ngIf="menuDetails?.soups?.length">
-      <ion-label>Sopas</ion-label>
-    </ion-list-header>
-    @for (item of menuDetails?.soups; track item.id) {
-      <ion-item>
-        <ion-checkbox slot="start" [(ngModel)]="item.selected"></ion-checkbox>
-        <ion-label>{{ item.name }}</ion-label>
-      </ion-item>
-    }
+    @for (item of category.menuItems; track item.id) {
+    <ion-item>
+      <ion-label>
+        <h2>{{ item.name }}</h2>
+        <p>{{ item.description }}</p>
+        <p><strong>{{ item.price | currency:'USD' }}</strong></p>
 
-    <ion-list-header *ngIf="menuDetails?.proteins?.length">
-      <ion-label>Proteínas</ion-label>
-    </ion-list-header>
-    @for (item of menuDetails?.proteins; track item.id) {
-      <ion-item>
-        <ion-checkbox slot="start" [(ngModel)]="item.selected"></ion-checkbox>
-        <ion-label>{{ item.name }}</ion-label>
-      </ion-item>
-    }
+        <!-- Selectores de Opciones (itemOptions) -->
+        @if (item.itemOptions?.length) {
+        <ion-list>
+          @for (option of item.itemOptions; track option.id) {
+          <ion-item>
+            <ion-label>{{ option.name }}</ion-label>
+            <ion-select [(ngModel)]="option.selectedChoice" interface="popover">
+              @for (choice of option.optionChoices; track choice.id) {
+              <ion-select-option [value]="choice.value">
+                {{ choice.value }}
+              </ion-select-option>
+              }
+            </ion-select>
+          </ion-item>
+          }
+        </ion-list>
+        }
 
-    <ion-list-header *ngIf="menuDetails?.mainCourses?.length">
-      <ion-label>Acompañamientos</ion-label>
-    </ion-list-header>
-    @for (item of menuDetails?.mainCourses; track item.id) {
-      <ion-item>
-        <ion-checkbox slot="start" [(ngModel)]="item.selected"></ion-checkbox>
-        <ion-label>{{ item.name }}</ion-label>
-      </ion-item>
+        <!-- Modificadores (itemModifiers) -->
+        @if (item.itemModifiers?.length) {
+        <ion-list>
+          @for (modifier of item.itemModifiers; track modifier.id) {
+          <ion-item>
+            <ion-checkbox slot="start" [(ngModel)]="modifier.selected"></ion-checkbox>
+            <ion-label>{{ modifier.name }}</ion-label>
+          </ion-item>
+          }
+        </ion-list>
+        }
+      </ion-label>
+    </ion-item>
     }
-
-    <ion-list-header *ngIf="menuDetails?.drinks?.length">
-      <ion-label>Bebidas</ion-label>
-    </ion-list-header>
-    @for (item of menuDetails?.drinks; track item.id) {
-      <ion-item>
-        <ion-checkbox slot="start" [(ngModel)]="item.selected"></ion-checkbox>
-        <ion-label>{{ item.name }}</ion-label>
-      </ion-item>
-    }
-
-    <ion-list-header *ngIf="menuDetails?.desserts?.length">
-      <ion-label>Postres</ion-label>
-    </ion-list-header>
-    @for (item of menuDetails?.desserts; track item.id) {
-      <ion-item>
-        <ion-checkbox slot="start" [(ngModel)]="item.selected"></ion-checkbox>
-        <ion-label>{{ item.name }}</ion-label>
-      </ion-item>
     }
   </ion-list>
 
-  <ion-button expand="block" color="primary" (click)="confirmSelection()" class="confirm-button">
+  <!-- Botón de Confirmación -->
+  <ion-button expand="block" color="primary" (click)="confirmSelection()">
     Confirmar Selección
   </ion-button>
+  }
 </ion-content>

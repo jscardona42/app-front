@@ -46,11 +46,14 @@ import { CurrencyPipe } from '@angular/common';
 })
 export class MenuPage {
   menuItems: FoodItem[] = [];
+  menus: any = [];
+  restaurants: any = [];
 
   constructor(private menuService: MenuService, private router: Router) { }
 
   ngOnInit() {
     this.loadMenu();
+    this.loadRestaurants();
   }
 
   loadMenu() {
@@ -62,11 +65,23 @@ export class MenuPage {
     });
   }
 
+  loadRestaurants() {
+    this.menuService.getRestaurants().subscribe({
+      next: (result) => {
+        // Aplanamos todos los menús de todos los restaurantes en un solo array
+        this.menus = result.data?.restaurants?.flatMap((restaurant: any) => restaurant.menus) || [];
+      },
+      error: (err) => console.error('Error:', err)
+    });
+  }
+
   ionViewWillEnter() {
     this.menuItems = this.menuService.getMenuItems();
   }
 
-  openMenuDetails(menuId: number) {
-    this.router.navigate(['/menu-details', menuId]);
+  openMenuDetails(menu: any) {
+    this.router.navigate(['/menu-details', menu.id], {
+      state: { menu }
+    });
   }
 }

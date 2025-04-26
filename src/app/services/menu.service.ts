@@ -43,6 +43,48 @@ export class MenuService {
     });
   }
 
+  getRestaurants() {
+    return this.apollo.query<any>({
+      query: gql`
+        query getRestaurants {
+          restaurants {
+            id
+            name
+            description
+            menus {
+              id
+              name
+              description
+              img
+              menuCategories {
+                id
+                name
+                menuItems {
+                  id
+                  name
+                  price
+                  itemOptions {
+                    id
+                    name
+                    optionChoices {
+                      id
+                      value
+                    }
+                  }
+                  itemModifiers {
+                    id
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      fetchPolicy: 'network-only',
+    });
+  }
+
   private mockMenu: FoodItem[] = [
     {
       id: 1,

@@ -11,11 +11,12 @@ import {
   IonTitle,
   IonToolbar,
   IonCheckbox,
-  IonButton
+  IonButton,
+  IonSelectOption
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { MenuService, MenuDetails, FoodItem } from '../../services/menu.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -37,6 +38,7 @@ import { FormsModule } from '@angular/forms';
     IonBackButton,
     CommonModule,
     IonButton,
+    IonSelectOption,
     FormsModule
   ]
 })
@@ -44,11 +46,21 @@ export class MenuDetailsPage implements OnInit {
   menuId: number = 0;
   menuName: string = '';
   menuDetails?: MenuDetails;
+  selectedMenu: any;
+  menu: any;
 
   constructor(
     private menuService: MenuService,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    this.menu = navigation?.extras?.state?.['menu'];
+
+    if (!this.menu) {
+      this.router.navigate(['/menu-list']);
+    }
+  }
 
   ngOnInit() {
     this.menuId = +this.route.snapshot.paramMap.get('id')!;
